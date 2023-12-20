@@ -82,7 +82,7 @@ public final class ChatStore: ObservableObject {
             )
             // For assistant case we send chats to thread and then poll, polling will receive sent chat + new assistant messages.
         case .assistant:
-
+            // TODO - 处理 assistant 的 function - assistantStore.availableAssistants.filter { conversation.assistantId == $0.id }.first?.name ?? "" 
             // First message in an assistant thread.
             if conversations[conversationIndex].messages.count == 0 {
 
@@ -91,6 +91,7 @@ public final class ChatStore: ObservableObject {
                 conversations[conversationIndex].messages.append(localMessage)
 
                 do {
+                    
                     let threadsQuery = ThreadsQuery(messages: [Chat(role: message.role, content: message.content)])
                     let threadsResult = try await openAIClient.threads(query: threadsQuery)
 
@@ -161,7 +162,7 @@ public final class ChatStore: ObservableObject {
                     required: ["location"]
                 )
             )
-
+            
             let functions = [weatherFunction]
 
             let chatsStream: AsyncThrowingStream<ChatStreamResult, Error> = openAIClient.chatsStream(

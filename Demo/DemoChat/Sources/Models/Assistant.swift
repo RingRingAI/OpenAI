@@ -6,9 +6,10 @@
 //
 
 import Foundation
+import OpenAI
 
 struct Assistant: Hashable {
-    init(id: String, name: String, description: String? = nil, instructions: String? = nil, codeInterpreter: Bool, retrieval: Bool, fileIds: [String]? = nil) {
+    init(id: String, name: String, description: String? = nil, instructions: String? = nil, codeInterpreter: Bool, retrieval: Bool, fileIds: [String]? = nil, funcJson: ChatFunctionDeclaration?) {
         self.id = id
         self.name = name
         self.description = description
@@ -16,6 +17,7 @@ struct Assistant: Hashable {
         self.codeInterpreter = codeInterpreter
         self.retrieval = retrieval
         self.fileIds = fileIds
+        self.funcJson = funcJson
     }
     
     typealias ID = String
@@ -25,9 +27,9 @@ struct Assistant: Hashable {
     let description: String?
     let instructions: String?
     let fileIds: [String]?
+    let funcJson: ChatFunctionDeclaration?
     var codeInterpreter: Bool
     var retrieval: Bool
 }
-
 
 extension Assistant: Equatable, Identifiable {}

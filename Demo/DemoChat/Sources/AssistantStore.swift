@@ -73,8 +73,11 @@ public final class AssistantStore: ObservableObject {
                 let codeInterpreter = result.tools?.filter { $0.toolType == "code_interpreter" }.first != nil
                 let retrieval = result.tools?.filter { $0.toolType == "retrieval" }.first != nil
                 let fileIds = result.fileIds ?? []
-
-                assistants.append(Assistant(id: result.id, name: result.name, description: result.description, instructions: result.instructions, codeInterpreter: codeInterpreter, retrieval: retrieval, fileIds: fileIds))
+                var funcJson: ChatFunctionDeclaration?
+                if let functionTool = result.tools?.filter({ $0.toolType == "function" }).first {
+                    funcJson = functionTool.funcJson
+                }
+                assistants.append(Assistant(id: result.id, name: result.name, description: result.description, instructions: result.instructions, codeInterpreter: codeInterpreter, retrieval: retrieval, fileIds: fileIds, funcJson: funcJson))
             }
             if after == nil {
                 availableAssistants = assistants
@@ -115,10 +118,10 @@ public final class AssistantStore: ObservableObject {
     func createToolsArray(codeInterpreter: Bool, retrieval: Bool) -> [Tool] {
         var tools = [Tool]()
         if codeInterpreter {
-            tools.append(Tool(toolType: "code_interpreter"))
+            tools.append(Tool(toolType: "code_interpreter", funcJson: nil))
         }
         if retrieval {
-            tools.append(Tool(toolType: "retrieval"))
+            tools.append(Tool(toolType: "retrieval", funcJson: nil))
         }
         return tools
     }
